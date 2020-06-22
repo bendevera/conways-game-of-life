@@ -33,6 +33,46 @@ class Grid extends React.Component {
         return cells;
     }
 
+    getRandomGrid = () => {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
+        var height = 25;
+        var width = 25;
+        let cells = [];
+        var aliveThreshold = Math.random();
+
+        for (var row=0; row < height; row++) {
+            let curr_row = [];
+            for (var col=0; col < width; col++) {
+                var aliveDecider = Math.random();
+                if (aliveDecider > aliveThreshold) {
+                    var curr_cell = {
+                        alive: true,
+                        row: row,
+                        col: col,
+                        counter: 0
+                    }
+                } else {
+                    var curr_cell = {
+                        alive: false,
+                        row: row,
+                        col: col,
+                        counter: 0
+                    }
+                }
+                curr_row.push(curr_cell);
+            }
+            cells.push(curr_row);
+        }
+        this.setState({
+            cells: cells,
+            gen: 0,
+            running: false,
+            intervalId: null
+        })
+    }
+
     clearGrid = () => {
         this.setState({
             cells: this.getBlankGrid(25, 25),
@@ -48,24 +88,20 @@ class Grid extends React.Component {
     }
 
     changeCell = (newAliveState, row, col) => {
-        console.log("changing...")
-        let newCells = this.state.cells;
         this.state.cells[row][col].alive = newAliveState;
         this.forceUpdate()
     }
 
     startGame = () => {
-        console.log("Starting game")
         this.setState({
-                running: true
+                running: true,
+                gen: 0
             },
             this.gameLoop
         )
-        console.log("end of start game")
     }
 
     stopGame = () => {
-        console.log("stoping game")
         clearInterval(this.state.intervalId)
         this.setState({
             intervalId: null,
@@ -85,21 +121,28 @@ class Grid extends React.Component {
     }
 
     getNewGen = () => {
-        let newCells = this.getNewCells(this.state.cells)
-        console.log("getting new cells")
-        let newGen = this.state.gen + 1
-        console.log(newGen)
-        this.setState({
-            cells: newCells,
-            gen: newGen
-        })
-        console.log("set new state")
+        let [changeMade, newCells] = this.getNewCells(this.state.cells)
+        if (changeMade) {
+            let newGen = this.state.gen + 1
+            this.setState({
+                cells: newCells,
+                gen: newGen
+            })
+        } else {
+            clearInterval(this.state.intervalId)
+            this.setState({
+                running: false,
+                intervalId: null
+            })
+            alert("Cells have hit a gridlock. End of simulation at generation " + this.state.gen.toString() + ".")
+        }
     }
 
     getNewCells = (cells) => {
         var height = cells.length;
         var width = cells[0].length
         let newCells = []
+        let changeMade = false;
 
         for (var row = 0; row < height; row++) {
             let currRow = [];
@@ -118,6 +161,7 @@ class Grid extends React.Component {
                             alive: false,
                             counter: 0
                         }
+                        changeMade = true;
                     }
                 } else {
                     if (liveNeighborCount == 3) {
@@ -126,6 +170,7 @@ class Grid extends React.Component {
                             alive: true,
                             counter: 1
                         }
+                        changeMade = true;
                     } else {
                         // counter should already be 0
                         var newCell = {
@@ -138,7 +183,7 @@ class Grid extends React.Component {
             newCells.push(currRow)
         }
 
-        return newCells;
+        return [changeMade, newCells];
     }
 
     getLiveNeighborCount = (cells, height, width, row, col) => {
@@ -172,7 +217,7 @@ class Grid extends React.Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <a className="navbar-brand" href="#">Conway's Game of Life   -   <i className="font-weight-light">Gen {this.state.gen}</i></a>
+                    <a className="navbar-brand" href="#">Conway's Game of Life</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -180,21 +225,19 @@ class Grid extends React.Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
-                            {stopStartButton}
-                        </li>
-                        <li className="nav-item">
-                            <button className="btn btn-outline-primary mx-2" onClick={this.nextGen}>Next Generation</button>
-                        </li>
-                        <li className="nav-item">
-                            <button className="btn btn-outline-primary mx-2" onClick={this.printGrid}>Print Grid</button>
-                        </li>
-                        <li className="nav-item">
-                            <button className="btn btn-outline-info mx-2" onClick={this.clearGrid}>Clear Grid</button>
+                            <i className="font-weight-light">Generation {this.state.gen}</i>
                         </li>
                         </ul>
                     </div>
                 </nav>
-                <div className="container">
+                <div className="row justify-content-center my-2">
+                    {stopStartButton}
+                    <button className="btn btn-outline-primary mx-2" onClick={this.nextGen}>Next Generation</button>
+                    <button className="btn btn-outline-secondary mx-2" onClick={this.getRandomGrid}>Random Grid</button>
+                    <button className="btn btn-outline-primary mx-2" onClick={this.printGrid}>Print Grid</button>
+                    <button className="btn btn-outline-info mx-2" onClick={this.clearGrid}>Clear Grid</button>
+                </div>
+                <div className="container my-2 grid-container">
                     {this.state.cells.map((row, rowNum) => {
                         var rowClassName = "row row-" + rowNum.toString();
                         // var cellBase = "col cell cell-";
