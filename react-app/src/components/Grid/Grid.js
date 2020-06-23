@@ -9,7 +9,8 @@ class Grid extends React.Component {
             cells: this.getBlankGrid(25, 25),
             gen: 0,
             running: false,
-            intervalId: null
+            intervalId: null,
+            speed: "slow"
         }
     }
 
@@ -110,7 +111,15 @@ class Grid extends React.Component {
     }
 
     gameLoop = () => {
-        var intervalId = setInterval(this.getNewGen, 1000)
+        let intervalSpeed;
+        if (this.state.speed == "slow") {
+            intervalSpeed = 1000
+        } else if (this.state.speed == "med") {
+            intervalSpeed = 500
+        } else {
+            intervalSpeed = 250
+        }
+        var intervalId = setInterval(this.getNewGen, intervalSpeed)
         this.setState({
             intervalId: intervalId
         })
@@ -203,6 +212,13 @@ class Grid extends React.Component {
         return liveNeighborCount
     }
 
+    changeSpeed = (e) => {
+        var newSpeed = e.target.value;
+        this.setState({
+            speed: newSpeed
+        })
+    }
+
     render() {
         var stopStartButton;
         if (this.state.running) {
@@ -230,12 +246,27 @@ class Grid extends React.Component {
                         </ul>
                     </div>
                 </nav>
+                <div className="container my-2">
+                    <h5 className="ml-4 text-left">
+                        Rules:
+                    </h5>
+                    <ul className="list-group list-group-flush text-left">
+                        <li className="list-group-item">Any live cell with two or three live neighbours survives.</li>
+                        <li className="list-group-item">Any dead cell with three live neighbours becomes a live cell.</li>
+                        <li className="list-group-item">All other live cels die in the next generation. Similarly, all other dead cells stay dead.</li>
+                    </ul>
+                </div>
                 <div className="row justify-content-center my-2">
                     {stopStartButton}
                     <button className="btn btn-outline-primary mx-2" onClick={this.nextGen}>Next Generation</button>
                     <button className="btn btn-outline-secondary mx-2" onClick={this.getRandomGrid}>Random Grid</button>
                     <button className="btn btn-outline-primary mx-2" onClick={this.printGrid}>Print Grid</button>
                     <button className="btn btn-outline-info mx-2" onClick={this.clearGrid}>Clear Grid</button>
+                    <div className="btn-group mx-2">
+                        <button className="btn btn-secondary" onClick={this.changeSpeed} value="slow">Slow</button>
+                        <button className="btn btn-secondary" onClick={this.changeSpeed} value="med">Medium</button>
+                        <button className="btn btn-secondary" onClick={this.changeSpeed} value="fast">Fast</button>
+                    </div>
                 </div>
                 <div className="container my-2 grid-container">
                     {this.state.cells.map((row, rowNum) => {
@@ -252,7 +283,8 @@ class Grid extends React.Component {
                                             row={col.row}
                                             col={col.col}
                                             counter={col.counter}
-                                            changeCell={this.changeCell} />
+                                            changeCell={this.changeCell}
+                                            running={this.state.running} />
                                             
                                     )
                                 })}
