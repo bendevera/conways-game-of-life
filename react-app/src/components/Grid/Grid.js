@@ -35,8 +35,13 @@ class Grid extends React.Component {
     }
 
     getRandomGrid = () => {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
+        if (this.state.intervalId) {
+            clearInterval(this.state.intervalId);
+            this.setState({
+                intervalId: null,
+                running: false,
+                gen: 0
+            })
         }
         var height = 25;
         var width = 25;
@@ -75,9 +80,14 @@ class Grid extends React.Component {
     }
 
     clearGrid = () => {
+        if (this.state.intervalId) {
+            clearInterval(this.state.intervalId)
+        }
         this.setState({
             cells: this.getBlankGrid(25, 25),
-            gen: 0
+            gen: 0,
+            running: false,
+            intervalId: null
         })
     }
 
@@ -233,18 +243,24 @@ class Grid extends React.Component {
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <a className="navbar-brand" href="#">Conway's Game of Life</a>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <div className="col justify-content-start">
+                        <a className="navbar-brand" href="#">Conway's Game of Life</a>
+                        <a className="nav-item ml-2" style={{"color": "black"}} href="https://www.bendevera.com/" target="_blank">by bendevera.</a>
+                    </div>
+                    <div className="col justify-content-end">
+                        <i className="font-weight-light">Generation {this.state.gen}</i>
+                    </div>
+                    {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </button> */}
 
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    {/* <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
                             <i className="font-weight-light">Generation {this.state.gen}</i>
                         </li>
                         </ul>
-                    </div>
+                    </div> */}
                 </nav>
                 <div className="container my-2">
                     <h5 className="ml-4 text-left">
@@ -258,11 +274,11 @@ class Grid extends React.Component {
                 </div>
                 <div className="row justify-content-center my-2">
                     {stopStartButton}
-                    <button className="btn btn-outline-primary mx-2" onClick={this.nextGen}>Next Generation</button>
-                    <button className="btn btn-outline-secondary mx-2" onClick={this.getRandomGrid}>Random Grid</button>
-                    <button className="btn btn-outline-primary mx-2" onClick={this.printGrid}>Print Grid</button>
-                    <button className="btn btn-outline-info mx-2" onClick={this.clearGrid}>Clear Grid</button>
-                    <div className="btn-group mx-2">
+                    <button className="btn btn-outline-primary mx-2 my-1" onClick={this.nextGen}>Next Generation</button>
+                    <button className="btn btn-outline-secondary mx-2 my-1" onClick={this.getRandomGrid}>Random Grid</button>
+                    <button className="btn btn-outline-primary mx-2 my-1" onClick={this.printGrid}>Print Grid</button>
+                    <button className="btn btn-outline-info mx-2 my-1" onClick={this.clearGrid}>Clear Grid</button>
+                    <div className="btn-group mx-2 my-1">
                         <button className="btn btn-secondary" onClick={this.changeSpeed} value="slow">Slow</button>
                         <button className="btn btn-secondary" onClick={this.changeSpeed} value="med">Medium</button>
                         <button className="btn btn-secondary" onClick={this.changeSpeed} value="fast">Fast</button>

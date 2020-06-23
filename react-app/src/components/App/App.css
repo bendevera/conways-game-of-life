@@ -6,13 +6,6 @@
   border: 1px solid black;
 }
 
-.cell {
-  overflow: hidden;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-}
-
 .alive {
   border: 1px solid #262626;
   /* background-color: #262626; */
@@ -33,4 +26,108 @@
 
 .cell:hover {
   border: 1px solid black;
+}
+
+
+/* 
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+
+@media (min-width: 1281px) {
+  
+  /* Current CSS is perfect */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 30px;
+    height: 38px;
+  }
+}
+
+/* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  
+  /* Current CSS isn't perfect but still works */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 30px;
+    height: 38px;
+  }
+}
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  
+  /* //CSS */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 5px !important;
+    height: 18px;
+    padding: 0;
+  }
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  
+  /* //CSS */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 5px !important;
+    height: 18px;
+    padding: 0;
+  }
+  
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  
+  /* //CSS */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 2px;
+    height: 13px;
+    padding: 0;
+  }
+  
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  
+  /* //CSS */
+  .cell {
+    overflow: hidden;
+    cursor: pointer;
+    width: 2px;
+    height: 13px;
+    padding: 0;
+  }
+  
 }
