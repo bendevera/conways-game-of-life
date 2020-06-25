@@ -1,5 +1,6 @@
-# Python implementation of the Conway's Game of Life
+# Conway's Game of Life 
+[by bendevera.](https://www.bendevera.com/)
 
-## "new board" function will be packaged as an API endpoint to serve the new grid of cells given the current grid
-
-(Conway's Game of Life wiki page)[https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns]
+## Links
+- [React App implementation](https://life-bendevera.herokuapp.com/)
+- [Conway's Game of Life wiki page](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns)
