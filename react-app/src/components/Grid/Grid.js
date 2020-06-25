@@ -224,9 +224,18 @@ class Grid extends React.Component {
 
     changeSpeed = (e) => {
         var newSpeed = e.target.value;
-        this.setState({
-            speed: newSpeed
-        })
+        if (this.state.running) {
+            clearInterval(this.state.intervalId)
+            this.setState({
+                    speed: newSpeed
+                },
+                this.gameLoop
+            )
+        } else {
+            this.setState({
+                speed: newSpeed
+            })
+        }
     }
 
     render() {
