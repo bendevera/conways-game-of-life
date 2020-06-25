@@ -91,13 +91,6 @@ class Grid extends React.Component {
         })
     }
 
-    printGrid = () => {
-        let height = this.state.cells.length
-        for (var i=0; i<height; i++) {
-            console.log(this.state.cells[i])
-        }
-    }
-
     changeCell = (newAliveState, row, col) => {
         this.state.cells[row][col].alive = newAliveState;
         this.forceUpdate()
@@ -215,6 +208,10 @@ class Grid extends React.Component {
                             liveNeighborCount++
                         }
                     }
+                } else {
+                    if (cells[(i+height) % height][(j+width) % width].alive) {
+                        liveNeighborCount++
+                    }
                 }
             }
         }
@@ -259,17 +256,6 @@ class Grid extends React.Component {
                     <div className="col justify-content-end">
                         <i className="font-weight-light">Generation {this.state.gen}</i>
                     </div>
-                    {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button> */}
-
-                    {/* <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav ml-auto">
-                        <li className="nav-item">
-                            <i className="font-weight-light">Generation {this.state.gen}</i>
-                        </li>
-                        </ul>
-                    </div> */}
                 </nav>
                 <div className="container my-2">
                     <h5 className="ml-4 text-left">
@@ -285,7 +271,6 @@ class Grid extends React.Component {
                     {stopStartButton}
                     <button className="btn btn-outline-primary mx-2 my-1" onClick={this.nextGen}>Next Generation</button>
                     <button className="btn btn-outline-secondary mx-2 my-1" onClick={this.getRandomGrid}>Random Grid</button>
-                    <button className="btn btn-outline-primary mx-2 my-1" onClick={this.printGrid}>Print Grid</button>
                     <button className="btn btn-outline-info mx-2 my-1" onClick={this.clearGrid}>Clear Grid</button>
                     <div className="btn-group mx-2 my-1">
                         <button className="btn btn-secondary" onClick={this.changeSpeed} value="slow">Slow</button>
@@ -296,11 +281,9 @@ class Grid extends React.Component {
                 <div className="container my-2 grid-container">
                     {this.state.cells.map((row, rowNum) => {
                         var rowClassName = "row row-" + rowNum.toString();
-                        // var cellBase = "col cell cell-";
                         return (
                             <div className={rowClassName} key={rowNum}>
                                 {this.state.cells[rowNum].map((col, colNum) => {
-                                    // var cellClassName = cellBase + rowNum.toString() + "-" + colNum.toString();
                                     return (
                                         <Cell 
                                             key={colNum}

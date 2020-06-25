@@ -33,15 +33,14 @@ class Cell extends React.Component {
     render() {
         var cellBase = "col cell cell-";
         var cellClassName = cellBase + this.state.row.toString() + "-" + this.state.col.toString();
-        // let customScale = chroma.scale().domain([0,1]);
         let customScale = chroma.scale(['#9CDF7C','#2A4858']).domain([0, 1])
         let backgroundColor;
         if (this.state.alive) {
             cellClassName += " alive";
-            if (this.state.counter > 30 | !this.props.running) {
+            if (this.state.counter > 20 | !this.props.running) {
                 backgroundColor = customScale(1)
             } else {
-                backgroundColor = customScale(this.state.counter/30)
+                backgroundColor = customScale(this.state.counter/20)
             }
         } else {
             backgroundColor = "white"
